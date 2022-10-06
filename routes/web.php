@@ -13,6 +13,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/cprovider/cdeliver', 'App\Http\Controllers\MTController@sendMt')->name('cprovider.cdeliver');
+Route::get('/send/mt', 'App\Http\Controllers\MTController@sendMt')->name('send.mt');
