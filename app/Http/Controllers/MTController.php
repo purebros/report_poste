@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class MTController extends BaseController {
    public function sendMT(Request $request){
-        Log::info('MTController sendMT', ['request'=>$request->all()]);
+        Log::info('MTController sendMT, init', ['request'=>$request->all()]);
         $mtUser     = $request->get('mt_user');
         $mtPass     = $request->get('mt_pass');
         $mtFormat   = $request->get('mt_format');//false
@@ -49,6 +49,7 @@ class MTController extends BaseController {
         ));
 
         $response = curl_exec($curl);
+        Log::info('MTController sendMT, curl to ENGINEERING', ['request'=>$request->all(), 'response'=>$response]);
         $err = curl_error($curl);
         curl_close($curl);
         if ($err) {
