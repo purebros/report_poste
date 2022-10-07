@@ -15,3 +15,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/cprovider/cdeliver', 'App\Http\Controllers\MTController@sendMt')->name('cprovider.cdeliver');
 Route::get('/send/mt', 'App\Http\Controllers\MTController@sendMt')->name('send.mt');
+Route::get('/notification/mt', 'App\Http\Controllers\NotificationController@mt')->name('notification.mt');
+Route::get('/notification/mo', 'App\Http\Controllers\NotificationController@mo')->name('notification.mo');
