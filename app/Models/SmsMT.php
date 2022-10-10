@@ -9,7 +9,7 @@ class SmsMT extends Model {
     protected $connection='iliad';
     protected $table='SmsMT';
     protected $primaryKey='tx_id';
-
+public $timestamps = false;
     protected $fillable = [
             'mt_id',
             'IdUsers',

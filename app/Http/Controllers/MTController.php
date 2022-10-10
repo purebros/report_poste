@@ -12,7 +12,8 @@ use Illuminate\Http\Request;
 
 class MTController extends BaseController {
     public function sendMT(Request $request){
-        Log::info('MTController sendMT, init', ['request'=>$request->all()]);
+	    Log::info('MTController sendMT, init', ['request'=>$request->all()]);
+
         $mtUser     = $request->get('mt_user');
         $mtPass     = $request->get('mt_pass');
         $mtFormat   = $request->get('mt_format');//false
@@ -27,7 +28,7 @@ class MTController extends BaseController {
         $mtBody1    = $request->get('mt_body1');
         $mtServType = $request->get('mt_servtype');
 
-        $shortNumberServiceType = ShortNumberServiceType::getByServiceType($mtServType);
+	$shortNumberServiceType = ShortNumberServiceType::getByServiceType($mtServType);
         if(!$shortNumberServiceType){
             return Constants::SERVICE_NOT_FOUND;
         }
@@ -49,17 +50,17 @@ class MTController extends BaseController {
             'MSISDN'=>$mtTarget,
             'categ'=>$shortNumberServiceType->categ,
             'delivery_mode'=>0,
-            'reason'=>'DEFAULT',
+	    'reason'=>'DEFAULT',
             'cents'=>$shortNumberServiceType->price,
             'message_text'=>$mtBody1,
             'IdState'=>0,
-            'syn_result'=>null,
+            'syn_result'=>'',
             'syn_reason'=>null,
             'msg_id'=>null,
             'syn_error_type'=>null,
             'syn_op_response_code'=>null,
             'syn_op_response_message'=>null,
-            'delivery_status'=>null,
+            'delivery_status'=>'',
             'op_response_code'=>null,
             'op_response_message'=>null,
             'servicetype'=>$mtServType,
