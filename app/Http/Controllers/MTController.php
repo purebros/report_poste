@@ -50,7 +50,7 @@ class MTController extends BaseController {
             'MSISDN'=>$mtTarget,
             'categ'=>$shortNumberServiceType->categ,
             'delivery_mode'=>0,
-	    'reason'=>'DEFAULT',
+	        'reason'=>'DEFAULT',
             'cents'=>$shortNumberServiceType->price,
             'message_text'=>$mtBody1,
             'IdState'=>0,
@@ -67,8 +67,22 @@ class MTController extends BaseController {
         ]);
 
         $curl = curl_init();
+        $url = "https://ermes-coll.engds.it/ermes184/serviceEngine";
+        $headers = array(
+            "authorization: Basic ".base64_encode('PUBRO:0958riue5205tvee3487atiz'),
+            "cache-control: no-cache",
+            "cmd: sendBillingSMS",
+            "tx-id: {$smsMT->tx_id}",
+            "msisdn: +{$mtTarget}",
+            "categ: {$shortNumberServiceType->categ}",
+            "op-id: {$mtCarrier}",
+            "cents: {$shortNumberServiceType->price}",
+            "content-type: application/x-www-form-urlencoded; charset=ISO-8859-15",
+            "offer-mode: PULL",
+            "sid: {$shortNumberServiceType->sid}",
+        );
         curl_setopt_array($curl, array(
-           CURLOPT_URL => "https://ermes-coll.engds.it/ermes184/serviceEngine",
+           CURLOPT_URL => $url,
            CURLOPT_RETURNTRANSFER => true,
            CURLOPT_ENCODING => "",
            CURLOPT_MAXREDIRS => 10,
@@ -76,24 +90,11 @@ class MTController extends BaseController {
            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
            CURLOPT_CUSTOMREQUEST => "POST",
            CURLOPT_POSTFIELDS => "text={$mtBody1}",
-           CURLOPT_HTTPHEADER => array(
-               "authorization: Basic ".base64_encode('PUBRO:0958riue5205tvee3487atiz'),
-               "cache-control: no-cache",
-               "cmd: sendBillingSMS",
-               "tx-id: {$smsMT->tx_id}",
-               "msisdn: +{$mtTarget}",
-               "categ: {$shortNumberServiceType->categ}",
-               "op-id: {$mtCarrier}",
-               "cents: {$shortNumberServiceType->price}",
-               "content-type: application/x-www-form-urlencoded; charset=ISO-8859-15",
-               "offer-mode: PULL",
-               "sid: {$shortNumberServiceType->sid}",
-
-           ),
+           CURLOPT_HTTPHEADER => $headers,
         ));
 
         $response   = curl_exec($curl);
-        Log::info('MTController sendMT, curl to ENGINEERING', ['request'=>$request->all(), 'response'=>$response]);
+        Log::info('MTController sendMT, curl to ENGINEERING', ['request'=>$request->all(), 'url'=>$url, 'headers'=>$headers, 'response'=>$response]);
         $err        = curl_error($curl);
         curl_close($curl);
         if ($err) {
@@ -102,6 +103,8 @@ class MTController extends BaseController {
             $smsMT->save();
            return Constants::CARRIER_CONNECTING_ERROR;
         } else {
+            $smsMT->syn_result = Constants::SUCCESS;
+            $smsMT->save();
            return Constants::SUCCESS;
         }
    }
