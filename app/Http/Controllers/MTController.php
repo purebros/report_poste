@@ -86,35 +86,49 @@ class MTController extends BaseController {
             $headers[] = "offer-mode: PULL";
         }
         $headers[]=$cmd;
-
+        $headersResponse=[];
         curl_setopt_array($curl, array(
-           CURLOPT_URL => $url,
-           CURLOPT_RETURNTRANSFER => true,
-           CURLOPT_ENCODING => "",
-           CURLOPT_MAXREDIRS => 10,
-           CURLOPT_TIMEOUT => 30,
-           CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-           CURLOPT_CUSTOMREQUEST => "POST",
-           CURLOPT_POSTFIELDS => "text={$mtBody1}",
-           CURLOPT_HTTPHEADER => $headers,
-           CURLOPT_HEADER => 1,
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => "text={$mtBody1}",
+            CURLOPT_HTTPHEADER => $headers,
+            CURLOPT_HEADER => 1,
+            CURLOPT_HEADERFUNCTION =>
+            function ($curl, $header) use (&$headersResponse) {
+               $len = strlen($header);
+               $header = explode(':', $header, 2);
+               if (count($header) < 2) // ignore invalid headers
+                   return $len;
+               $headersResponse[strtolower(trim($header[0]))][] = trim($header[1]);
+               return $len;
+            }
         ));
 
         $response       = curl_exec($curl);
-        $headerSize     = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
-        $headerResponse = substr($response, 0, $headerSize);
-        Log::info('MTController sendMT, curl to ENGINEERING', ['request'=>$request->all(), 'url'=>$url, 'headers'=>$headers, 'response'=>$response, 'headerResponse'=>$headerResponse]);
-        $err        = curl_error($curl);
+        $err            = curl_error($curl);
+        $httpCode       = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        Log::info('MTController sendMT, curl to ENGINEERING', ['request'=>$request->all(), 'url'=>$url, 'headers'=>$headers, 'response'=>$response, 'headersResponse'=>$headersResponse, 'err'=>$err, 'httpCode'=>$httpCode]);
         curl_close($curl);
-        if ($err) {
+        if($err){
             $smsMT->syn_result = Constants::CARRIER_CONNECTING_ERROR;
             $smsMT->syn_reason = 'ERROR_CALL_CARRIER';
             $smsMT->save();
-           return Constants::CARRIER_CONNECTING_ERROR;
-        } else {
-            $smsMT->syn_result = Constants::SUCCESS;
+            return Constants::CARRIER_CONNECTING_ERROR;
+        }elseif ((int)$httpCode!=200) {
+            $smsMT->syn_result = isset($headersResponse['result']) ? $headersResponse['result'] : null;
+            $smsMT->syn_reason = 'ERROR_CALL_CARRIER';
             $smsMT->save();
-           return Constants::SUCCESS;
+            return Constants::CARRIER_CONNECTING_ERROR;
+        } else {
+            $smsMT->syn_result = isset($headersResponse['result']) ? $headersResponse['result'] : null;
+            $smsMT->msg_id = isset($headersResponse['msg-id']) ? $headersResponse['msg-id'] : null;
+            $smsMT->save();
+            return Constants::SUCCESS;
         }
    }
 }
