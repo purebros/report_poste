@@ -102,10 +102,14 @@ class MTController extends BaseController {
             function ($curl, $header) use (&$headersResponse) {
                $len = strlen($header);
                $header = explode(':', $header, 2);
-               if (count($header) < 2) // ignore invalid headers
+               if (count($header) < 2) { // ignore invalid headers
                    return $len;
-
-               $headersResponse[strtolower(trim($header[0]))][] = trim( preg_replace("/[^a-zA-Z0-9]+/", "", $header[1]));
+               }
+               if(is_array($header[1])){
+                   $headersResponse[strtolower(trim($header[0]))][] = trim( preg_replace("/[^a-zA-Z0-9]+/", "", $header[1][0]));
+               }else{
+                   $headersResponse[strtolower(trim($header[0]))][] = trim( preg_replace("/[^a-zA-Z0-9]+/", "", $header[1]));
+               }
                return $len;
             }
         ));
