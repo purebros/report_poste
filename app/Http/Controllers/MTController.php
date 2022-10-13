@@ -68,19 +68,25 @@ class MTController extends BaseController {
 
         $curl = curl_init();
         $url = "https://ermes-coll.engds.it/ermes184/serviceEngine";
+
+        $cmd = 'cmd:sendGenericCaringSMS';
         $headers = array(
             "authorization: Basic ".base64_encode('PUBRO:0958riue5205tvee3487atiz'),
             "cache-control: no-cache",
-            "cmd: sendBillingSMS",
             "tx-id: {$smsMT->tx_id}",
             "msisdn: +{$mtTarget}",
             "categ: {$shortNumberServiceType->categ}",
             "op-id: {$mtCarrier}",
-            "cents: {$shortNumberServiceType->price}",
             "content-type: application/x-www-form-urlencoded; charset=ISO-8859-15",
-            "offer-mode: PULL",
             "sid: {$shortNumberServiceType->sid}",
         );
+        if($shortNumberServiceType->price>0){
+            $cmd = 'cmd:sendBillingSMS';
+            $headers[] = "cents: {$shortNumberServiceType->price}";
+            $headers[] = "offer-mode: PULL";
+        }
+        $headers[]=$cmd;
+
         curl_setopt_array($curl, array(
            CURLOPT_URL => $url,
            CURLOPT_RETURNTRANSFER => true,
@@ -91,10 +97,13 @@ class MTController extends BaseController {
            CURLOPT_CUSTOMREQUEST => "POST",
            CURLOPT_POSTFIELDS => "text={$mtBody1}",
            CURLOPT_HTTPHEADER => $headers,
+           CURLOPT_HEADER => 1,
         ));
 
-        $response   = curl_exec($curl);
-        Log::info('MTController sendMT, curl to ENGINEERING', ['request'=>$request->all(), 'url'=>$url, 'headers'=>$headers, 'response'=>$response]);
+        $response       = curl_exec($curl);
+        $headerSize     = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
+        $headerResponse = substr($response, 0, $headerSize);
+        Log::info('MTController sendMT, curl to ENGINEERING', ['request'=>$request->all(), 'url'=>$url, 'headers'=>$headers, 'response'=>$response, 'headerResponse'=>$headerResponse]);
         $err        = curl_error($curl);
         curl_close($curl);
         if ($err) {
