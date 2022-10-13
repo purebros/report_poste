@@ -105,11 +105,7 @@ class MTController extends BaseController {
                if (count($header) < 2) // ignore invalid headers
                    return $len;
 
-               $value = str_replace('"', '', $header[1]);
-               $value = str_replace('[', '', $value);
-               $value = str_replace(']', '', $value);
-
-               $headersResponse[strtolower(trim($header[0]))][] = trim($value);
+               $headersResponse[strtolower(trim($header[0]))][] = trim($header[1]);
                return $len;
             }
         ));
@@ -125,13 +121,23 @@ class MTController extends BaseController {
             $smsMT->save();
             return Constants::CARRIER_CONNECTING_ERROR;
         }elseif ((int)$httpCode!=200) {
-            $smsMT->syn_result = isset($headersResponse['result']) ? $headersResponse['result'] : null;
-            $smsMT->syn_reason = 'ERROR_CALL_CARRIER';
+            $value              = str_replace('"', '', $headersResponse['result']);
+            $value              = str_replace('[', '', $value);
+            $value              = str_replace(']', '', $value);
+            $smsMT->syn_result  = $value;
+            $smsMT->syn_reason  = 'ERROR_CALL_CARRIER';
             $smsMT->save();
             return Constants::CARRIER_CONNECTING_ERROR;
         } else {
-            $smsMT->syn_result = isset($headersResponse['result']) ? $headersResponse['result'] : null;
-            $smsMT->msg_id = isset($headersResponse['msg-id']) ? $headersResponse['msg-id'] : null;
+            $value          = str_replace('"', '', $headersResponse['result']);
+            $value          = str_replace('[', '', $value);
+            $value          = str_replace(']', '', $value);
+            $smsMT->syn_result = $value;
+
+            $value          = str_replace('"', '', $headersResponse['msg-id']);
+            $value          = str_replace('[', '', $value);
+            $value          = str_replace(']', '', $value);
+            $smsMT->msg_id  = $value;
             $smsMT->save();
             return Constants::SUCCESS;
         }
