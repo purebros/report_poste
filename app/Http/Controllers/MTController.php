@@ -104,7 +104,12 @@ class MTController extends BaseController {
                $header = explode(':', $header, 2);
                if (count($header) < 2) // ignore invalid headers
                    return $len;
-               $headersResponse[strtolower(trim($header[0]))][] = trim($header[1]);
+
+               $value = str_replace('"', '', $header[1]);
+               $value = str_replace('[', '', $value);
+               $value = str_replace(']', '', $value);
+
+               $headersResponse[strtolower(trim($header[0]))][] = trim($value);
                return $len;
             }
         ));
