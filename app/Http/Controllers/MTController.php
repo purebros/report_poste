@@ -105,7 +105,7 @@ class MTController extends BaseController {
                if (count($header) < 2) // ignore invalid headers
                    return $len;
 
-               $headersResponse[strtolower(trim($header[0]))][] = trim($header[1]);
+               $headersResponse[strtolower(trim($header[0]))][] = trim( preg_replace("/[^a-zA-Z0-9]+/", "", $header[1]));
                return $len;
             }
         ));
@@ -121,23 +121,13 @@ class MTController extends BaseController {
             $smsMT->save();
             return Constants::CARRIER_CONNECTING_ERROR;
         }elseif ((int)$httpCode!=200) {
-            $value              = str_replace('"', '', $headersResponse['result']);
-            $value              = str_replace('[', '', $value);
-            $value              = str_replace(']', '', $value);
-            $smsMT->syn_result  = $value;
+            $smsMT->syn_result  = $headersResponse['result'];
             $smsMT->syn_reason  = 'ERROR_CALL_CARRIER';
             $smsMT->save();
             return Constants::CARRIER_CONNECTING_ERROR;
         } else {
-            $value          = str_replace('"', '', $headersResponse['result']);
-            $value          = str_replace('[', '', $value);
-            $value          = str_replace(']', '', $value);
-            $smsMT->syn_result = $value;
-
-            $value          = str_replace('"', '', $headersResponse['msg-id']);
-            $value          = str_replace('[', '', $value);
-            $value          = str_replace(']', '', $value);
-            $smsMT->msg_id  = $value;
+            $smsMT->syn_result  = $headersResponse['result'];
+            $smsMT->msg_id      = $headersResponse['msg-id'];
             $smsMT->save();
             return Constants::SUCCESS;
         }
