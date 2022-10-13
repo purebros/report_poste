@@ -69,7 +69,7 @@ class MTController extends BaseController {
         $curl = curl_init();
         $url = "https://ermes-coll.engds.it/ermes184/serviceEngine";
 
-        $cmd = 'cmd:sendGenericCaringSMS';
+        $cmd = 'cmd:sendGenericCaringSMSXXX';
         $headers = array(
             "authorization: Basic ".base64_encode('PUBRO:0958riue5205tvee3487atiz'),
             "cache-control: no-cache",
@@ -81,7 +81,7 @@ class MTController extends BaseController {
             "sid: {$shortNumberServiceType->sid}",
         );
         if($shortNumberServiceType->price>0){
-            $cmd = 'cmd:sendBillingSMS';
+            $cmd = 'cmd:sendBillingSMSXXX';
             $headers[] = "cents: {$shortNumberServiceType->price}";
             $headers[] = "offer-mode: PULL";
         }
