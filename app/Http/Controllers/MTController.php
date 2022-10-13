@@ -78,13 +78,16 @@ class MTController extends BaseController {
            CURLOPT_HTTPHEADER => array(
                "authorization: Basic ".base64_encode('PUBRO:0958riue5205tvee3487atiz'),
                "cache-control: no-cache",
-               "categ: {$shortNumberServiceType->categ}",
-               "cmd: sendGenericCaringSMS",
-               "content-type: application/x-www-form-urlencoded",
+               "cmd: sendBillingSMS",
+               "tx-id: {$smsMT->tx_id}",
                "msisdn: +{$mtTarget}",
+               "categ: {$shortNumberServiceType->categ}",
                "op-id: {$mtCarrier}",
+               "cents: {$shortNumberServiceType->price}",
+               "content-type: application/x-www-form-urlencoded; charset=ISO-8859-15",
+               "offer-mode: PULL",
                "sid: {$shortNumberServiceType->sid}",
-               "tx-id: {$smsMT->tx_id}"
+
            ),
         ));
 
