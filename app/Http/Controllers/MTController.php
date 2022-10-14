@@ -110,19 +110,19 @@ class MTController extends BaseController {
             }
         ));
 
-        $response       = curl_exec($curl);
+        $response       = str_replace(array("\r", "\n"), '', curl_exec($curl));
         $err            = curl_error($curl);
         $httpCode       = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
         curl_close($curl);
         if($err){
-            Log::error('MTController sendMT, curl to ENGINEERING error', ['request'=>$request->all(), 'url'=>$url, 'headers'=>$headers, 'response'=>$response, 'headersResponse'=>$headersResponse, 'err'=>$err, 'httpCode'=>$httpCode]);
+            Log::error('MTController sendMT, curl to ENGINEERING error', ['request'=>$request->all(), 'url'=>$url, 'headers'=>$headers,  'headersResponse'=>$headersResponse, 'err'=>$err, 'httpCode'=>$httpCode, 'response'=>$response,]);
             $smsMT->syn_result = Constants::CARRIER_CONNECTING_ERROR;
             $smsMT->syn_reason = 'ERROR_CALL_CARRIER';
             $smsMT->save();
             return Constants::CARRIER_CONNECTING_ERROR;
         }elseif ((int)$httpCode!=200) {
-            Log::error('MTController sendMT, curl to ENGINEERING error', ['request'=>$request->all(), 'url'=>$url, 'headers'=>$headers, 'response'=>$response, 'headersResponse'=>$headersResponse, 'err'=>$err, 'httpCode'=>$httpCode]);
+            Log::error('MTController sendMT, curl to ENGINEERING error', ['request'=>$request->all(), 'url'=>$url, 'headers'=>$headers, 'headersResponse'=>$headersResponse, 'err'=>$err, 'httpCode'=>$httpCode, 'response'=>$response,]);
             $smsMT->syn_result  = isset($headersResponse['result']) ? $headersResponse['result'] : Constants::CARRIER_CONNECTING_ERROR;
             $smsMT->syn_reason  = 'ERROR_CALL_CARRIER';
             $smsMT->save();
