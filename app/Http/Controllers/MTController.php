@@ -67,11 +67,11 @@ class MTController extends BaseController {
         ]);
 
         $curl = curl_init();
-        $url = "https://ermes-coll.engds.it/ermes184/serviceEngine";
+        $url = "https://ssl.engds.it/ermes-iliad/serviceEngine";
 
         $cmd = 'cmd:sendGenericCaringSMS';
         $headers = array(
-            "authorization: Basic ".base64_encode('PUBRO:0958riue5205tvee3487atiz'),
+            "authorization: Basic ".base64_encode('PUBRO:5521wyqv0882qdoa2662exnb'),
             "cache-control: no-cache",
             "tx-id: {$smsMT->tx_id}",
             "msisdn: +{$mtTarget}",
