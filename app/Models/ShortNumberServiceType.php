@@ -9,6 +9,7 @@ class ShortNumberServiceType extends Model {
     protected $connection='iliad';
     protected $table='ShortNumberServiceType';
     protected $primaryKey='IdShortNumberServiceType';
+    public $timestamps =false;
     static function getByServiceType(int $serviceType){
         return self::where('ServiceType', $serviceType)
             ->select(

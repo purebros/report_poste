@@ -9,7 +9,7 @@ class SmsMTDeliveryStatusNotification extends Model {
     protected $connection='iliad';
     protected $table='SmsMTDeliveryStatusNotification';
     protected $primaryKey='IdSmsMTDeliveryStatusNotification';
-
+    public $timestamps =false;
     protected $fillable = [
         'tx_id',
         'sid',
