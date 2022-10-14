@@ -123,7 +123,7 @@ class MTController extends BaseController {
             return Constants::CARRIER_CONNECTING_ERROR;
         }elseif ((int)$httpCode!=200) {
             Log::error('MTController sendMT, curl to ENGINEERING error', ['request'=>$request->all(), 'url'=>$url, 'headers'=>$headers, 'response'=>$response, 'headersResponse'=>$headersResponse, 'err'=>$err, 'httpCode'=>$httpCode]);
-            $smsMT->syn_result  = $headersResponse['result'];
+            $smsMT->syn_result  = isset($headersResponse['result']) ? $headersResponse['result'] : Constants::CARRIER_CONNECTING_ERROR;
             $smsMT->syn_reason  = 'ERROR_CALL_CARRIER';
             $smsMT->save();
             return Constants::CARRIER_CONNECTING_ERROR;
