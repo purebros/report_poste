@@ -49,7 +49,8 @@ return [
 
         'daily' => [
             'driver' => 'daily',
-            'path' => storage_path('logs/laravel.log'),
+            //'path' => storage_path('logs/laravel.log'),
+            'path' => '/usr/local/bwms/logs/iliad-php.log',
             'level' => 'debug',
             'days' => 14,
         ],
