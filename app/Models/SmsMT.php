@@ -60,7 +60,7 @@ class SmsMT extends Model {
             'mt_id as TSOID,',
             'msisdn as  MSISDN',
             DB::raw("'Servizi Informativi BancoPosta e Postepay' as SERVICE_NAME"),
-            DB::raw("REPLACE((ShortNumberServiceType.price/100),'.',',') as  IMPORTO"),
+            DB::raw("REPLACE(TRUNCATE((ShortNumberServiceType.price/100),2),'.',',') as IMPORTO"),
             DB::raw("if (syn_result= 'SUCCESS','OK', 'KO') as STATO"),
             'op_response_code as CODICE_ERRORE',
             'op_response_message as   DESCRIZIONE_ERRORE')
