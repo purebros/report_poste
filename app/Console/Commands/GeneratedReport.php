@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Models\SmsMT;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class GeneratedReport extends Command {
 
@@ -20,11 +22,10 @@ class GeneratedReport extends Command {
      * @return int
      */
     public function handle() {
-        $now = Carbon::now();
-        $now->subMonths(1);
-        $startDate = $now->format('Y-m-01 00:00:00');
-        $endDate = $now->endOfMonth()->format('Y-m-d 23:59:59');
-        dd($startDate, $endDate);
-
+        $smsMt = new SmsMT();
+        $query = $smsMt->getByLoaderId();
+        while ($data = $query->fetch(\PDO::FETCH_ASSOC)) {
+            Log::info('DATA', $data);
+        }
     }
 }
