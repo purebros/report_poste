@@ -23,7 +23,7 @@ class GeneratedReport extends Command {
      */
     public function handle() {
         $smsMt = new SmsMT();
-        $query = $smsMt->getByLoaderId();
+        $query = $smsMt->getToReport();
         while ($data = $query->fetch(\PDO::FETCH_ASSOC)) {
             $this->info('Data: '. json_encode($data));
         }
