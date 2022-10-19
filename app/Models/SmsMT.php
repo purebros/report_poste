@@ -54,16 +54,16 @@ class SmsMT extends Model {
         $sql = self::select(
             DB::raw("DATE_FORMAT(InsertDate,'%Y%m') as  BILLING_PERIOD"),
             'ShortNumber as  NUMERAZIONE',
-            "'PosteMobile' as SERVING_PROVIDER",
-            "'ILIAD' as ACCESS_PROVIDER",
-            "'BancoPosta' as CSP_NAME",
+            DB::raw("'PosteMobile' as SERVING_PROVIDER"),
+            DB::raw("'ILIAD' as ACCESS_PROVIDER"),
+            DB::raw("'BancoPosta' as CSP_NAME"),
             'mt_id as TSOID,',
             'msisdn as  MSISDN',
-            "'Servizi Informativi BancoPosta e Postepay' as SERVICE_NAME",
-            "REPLACE((ShortNumberServiceType.price/100),'.',',') as  IMPORTO",
-            "if (syn_result= 'SUCCESS','OK', 'KO') as STATO",
+            DB::raw("'Servizi Informativi BancoPosta e Postepay' as SERVICE_NAME"),
+            DB::raw("REPLACE((ShortNumberServiceType.price/100),'.',',') as  IMPORTO"),
+            DB::raw("if (syn_result= 'SUCCESS','OK', 'KO') as STATO"),
             'op_response_code as CODICE_ERRORE',
-            ' op_response_message as   DESCRIZIONE_ERRORE')
+            'op_response_message as   DESCRIZIONE_ERRORE')
             ->whereRaw("SmsMT.InsertDate >= '{$startDate}'")
             ->whereRaw("SmsMT.InsertDate <= '{$endDate}'")
             ->join('ShortNumberServiceType', 'ShortNumberServiceType.ServiceType', 'SmsMT.servicetype')
