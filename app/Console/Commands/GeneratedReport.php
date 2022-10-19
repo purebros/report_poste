@@ -24,8 +24,16 @@ class GeneratedReport extends Command {
     public function handle() {
         $smsMt = new SmsMT();
         $query = $smsMt->getToReport();
+        $fileName       = 'PUREBROS_'.date('YmdHis').'.csv';
+        $csvSrc         = storage_path("app/public/{$fileName}") ;
+        $file           = fopen($csvSrc, 'w');
         while ($data = $query->fetch(\PDO::FETCH_ASSOC)) {
-            $this->info('Data: '. json_encode($data));
+            fputcsv($file, $data, ";");
         }
+        fclose($file);
+        $connection = ssh2_connect('10.10.2.150', 22);
+        ssh2_auth_password($connection, 'root', 'Dy64@ih!2mpQ_C7j');
+        ssh2_scp_send($connection, $csvSrc, "/usr/local/bwms/jobs/report_mensile_Poste/reports/archived/{$fileName}", 0644);
+        unset($csvSrc);
     }
 }
