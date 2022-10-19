@@ -24,7 +24,7 @@ class GeneratedReport extends Command {
     public function handle() {
         $smsMt = new SmsMT();
         $query = $smsMt->getToReport();
-        $fileName       = 'PUREBROS_'.date('YmdHis').'ILIAD.csv';
+        $fileName       = 'PUREBROS_'.date('YmdHis').'ILIAD';
         $csvSrc         = storage_path("app/public/{$fileName}") ;
         $file           = fopen($csvSrc, 'w');
         while ($data = $query->fetch(\PDO::FETCH_ASSOC)) {
