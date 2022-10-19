@@ -28,7 +28,7 @@ class GeneratedReport extends Command {
         $csvSrc         = storage_path("app/public/{$fileName}") ;
         $file           = fopen($csvSrc, 'w');
         while ($data = $query->fetch(\PDO::FETCH_ASSOC)) {
-            fwrite($file, implode(";", $data));
+            fwrite($file, implode(";", $data).'\r\n');
         }
         fclose($file);
         $connection = ssh2_connect('10.10.2.150', 22);
