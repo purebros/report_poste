@@ -25,7 +25,7 @@ class GeneratedReport extends Command {
         $smsMt = new SmsMT();
         $query = $smsMt->getByLoaderId();
         while ($data = $query->fetch(\PDO::FETCH_ASSOC)) {
-            Log::info('DATA', $data);
+            $this->info('Data: '. json_encode($data));
         }
     }
 }
