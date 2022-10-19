@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Models\SmsMT;
 use Illuminate\Console\Command;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class GeneratedReport extends Command {
@@ -22,6 +21,7 @@ class GeneratedReport extends Command {
      * @return int
      */
     public function handle() {
+        Log::info('Iliad:GeneratedReport start process');
         $smsMt = new SmsMT();
         $query = $smsMt->getToReport();
         $fileName       = 'PUREBROS_'.date('YmdHis').'ILIAD';
@@ -35,5 +35,6 @@ class GeneratedReport extends Command {
         ssh2_auth_password($connection, 'root', 'Dy64@ih!2mpQ_C7j');
         ssh2_scp_send($connection, $csvSrc, "/usr/local/bwms/jobs/report_mensile_Poste/reports/archived/{$fileName}", 0644);
         unset($csvSrc);
+        Log::info('Iliad:GeneratedReport end process');
     }
 }

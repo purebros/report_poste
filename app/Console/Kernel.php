@@ -25,8 +25,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        $schedule->command('Iliad:GeneratedReport')
+            ->runInBackground()
+            ->withoutOverlapping(720)
+            ->monthlyOn( 1, '04:00')
+            ->when(function() {
+                return true;
+            });
     }
 
     /**
