@@ -65,7 +65,7 @@ class SmsMT extends Model {
             'op_response_code as CODICE_ERRORE',
             ' op_response_message as   DESCRIZIONE_ERRORE')
             ->whereRaw("SmsMT.InsertDate >= '{$startDate}'")
-            ->whereRaw("SmsMT.InsertDate <= {$endDate}")
+            ->whereRaw("SmsMT.InsertDate <= '{$endDate}'")
             ->join('ShortNumberServiceType', 'ShortNumberServiceType.ServiceType', 'SmsMT.servicetype')
             ->toSql();
 
