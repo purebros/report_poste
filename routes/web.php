@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/cprovider/cdeliver', 'App\Http\Controllers\MTController@sendMt')->name('cprovider.cdeliver');
-Route::get('/send/mt', 'App\Http\Controllers\MTController@sendMt')->name('send.mt');
-Route::get('/notification/mt', 'App\Http\Controllers\NotificationController@mt')->name('notification.mt');
-Route::get('/notification/mo', 'App\Http\Controllers\NotificationController@mo')->name('notification.mo');
+Route::get('/cprovider/cdeliver', 'MTController@sendMt')->name('cprovider.cdeliver');
+Route::get('/send/mt', 'MTController@sendMt')->name('send.mt');
+Route::get('/notification/mt', 'NotificationController@mt')->name('notification.mt');
+Route::get('/notification/mo', 'NotificationController@mo')->name('notification.mo');
