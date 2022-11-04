@@ -28,6 +28,7 @@ class NotificationController extends BaseController {
        $text       = $request->header('text');
        $datetime   = $request->header('datetime');
 
+
        $user       = 'PUBRO';
        $pass       = '5521wyqv0882qdoa2662exnb';
        $url        = 'https://iliad.purebros.it/iliad-carrier/notification/mo';
