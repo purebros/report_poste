@@ -14,4 +14,6 @@
 Route::get('/cprovider/cdeliver', 'MTController@sendMt')->name('cprovider.cdeliver');
 Route::get('/send/mt', 'MTController@sendMt')->name('send.mt');
 Route::get('/notification/mt', 'NotificationController@mt')->name('notification.mt');
+Route::post('/notification/mt', 'NotificationController@mt')->name('notification.mt.post');
 Route::get('/notification/mo', 'NotificationController@mo')->name('notification.mo');
+Route::post('/notification/mo', 'NotificationController@mo')->name('notification.mo.post');
