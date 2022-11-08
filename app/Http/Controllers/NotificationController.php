@@ -25,7 +25,7 @@ class NotificationController extends BaseController {
        $txId       = $request->header('tx-id');
        $opId       = $request->header('op-id');
        $msisdn     = $request->header('msisdn');
-       $text       = $request->header('text');
+       $text       = $request->get('text');
        $datetime   = $request->header('datetime');
 
 
