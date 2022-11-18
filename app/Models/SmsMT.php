@@ -64,7 +64,7 @@ class SmsMT extends Model {
             DB::raw("REPLACE(TRUNCATE((ShortNumberServiceType.price/100),2),'.',',') as IMPORTO"),
             DB::raw("if (syn_result= 'SUCCESS','OK', 'KO') as STATO"),
             DB::raw("if (syn_result= 'SUCCESS','0', syn_result) as Error_code"),
-            DB::raw("if (syn_result= 'SUCCESS','Operation executed sucessfully', syn_result) as Error_Description")
+            DB::raw("if (syn_reason IS NULL,'Operation executed sucessfully', syn_reason) as Error_Description")
         )
             ->whereRaw("SmsMT.InsertDate >= '{$startDate}'")
             ->whereRaw("SmsMT.InsertDate <= '{$endDate}'")
