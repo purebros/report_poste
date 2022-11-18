@@ -63,8 +63,9 @@ class SmsMT extends Model {
             DB::raw("'Servizi Informativi BancoPosta e Postepay' as SERVICE_NAME"),
             DB::raw("REPLACE(TRUNCATE((ShortNumberServiceType.price/100),2),'.',',') as IMPORTO"),
             DB::raw("if (syn_result= 'SUCCESS','OK', 'KO') as STATO"),
-            'op_response_code as CODICE_ERRORE',
-            'op_response_message as   DESCRIZIONE_ERRORE')
+            DB::raw("if (syn_result= 'SUCCESS','0', syn_result) as Error_code"),
+            DB::raw("if (syn_result= 'SUCCESS','Operation executed sucessfully', syn_result) as Error_Description")
+        )
             ->whereRaw("SmsMT.InsertDate >= '{$startDate}'")
             ->whereRaw("SmsMT.InsertDate <= '{$endDate}'")
             ->join('ShortNumberServiceType', 'ShortNumberServiceType.ServiceType', 'SmsMT.servicetype')
