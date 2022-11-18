@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\SmsMT;
+use App\Utils\Constants;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -28,6 +29,7 @@ class GeneratedReport extends Command {
         $csvSrc         = storage_path("app/public/{$fileName}") ;
         $file           = fopen($csvSrc, 'w');
         while ($data = $query->fetch(\PDO::FETCH_ASSOC)) {
+            $data['Error_Description']= isset(Constants::TEXT_ERROR[$data['Error_code']]) ? Constants::TEXT_ERROR[$data['Error_code']] : Constants::TEXT_ERROR[99];
             fwrite($file, implode(";", $data)."\r\n");
         }
         fclose($file);

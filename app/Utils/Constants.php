@@ -4,7 +4,7 @@ namespace App\Utils;
 
 
 class Constants {
-// Operation executed successfully
+    // Operation executed successfully
     const SUCCESS = 0;
 
     // Invalid Username/Password
@@ -73,9 +73,6 @@ class Constants {
     // The TARGET is already active
     const MSISDN_IS_ACTIVE = 60;
 
-    // MSISDN not authorized
-    //public static final Integer MSISDN_NOT_AUTHORIZED = 63;
-
     // Service not found
     const SERVICE_NOT_FOUND = 64;
 
@@ -99,4 +96,38 @@ class Constants {
 
     // Internal error processing the request
     const INTERNAL_ERROR = 99;
+
+    const TEXT_ERROR = [
+        self::SUCCESS => 'Operation executed successfully',
+        self::BAD_CREDENTIALS => 'Invalid Username/Password',
+        self::CONNECTION_NOT_ALLOWED => 'Connection not allowed from source address',
+        self::PERMISSION_DENIED => 'Permission denied to use this operation',
+        self::BODY_IS_OUT_OF_RANGE => 'MT.Body is out of MT.Body Count range',
+        self::SERV_TYPE_NOT_SET => 'ServiceType not set to the requested operation. Contact Pure Bros support',
+        self::INVALID_CONTENT_SOURCE => 'Invalid content source',
+        self::MSISDN_NOT_COVERED => 'Target phone number not covered by Purebros',
+        self::UNAUTHORIZED_CARRIER => 'Unauthorized Carrier',
+        self::MSISDN_IN_BLACK_LIST => 'Target phone is blocked by blacklist',
+        self::MSISDN_NOT_AUTHORIZED => 'MSISDN not authorized',
+        self::INVALID_TARGET_ON_CARRIER => 'Invalid target on carrier',
+        self::MSISDN_SIM_IS_CHILD => 'MSISDN sim is child',
+        self::CARRIER_CONNECTING_ERROR => 'Problems connecting to carrier',
+        self::MT_ID_ALREADY_EXISTED => 'Content not delivered : MT.ContentID already exists',
+        self::RETRYABLE_ERROR => 'Error retryable',
+        self::CARRIER_OPERATION_DENIED => 'Operation denied for carrier',
+        self::INVALID_OPERATION => 'Invalid operation/Service disable (Just for activation)',
+        self::MSISDN_DELETED => 'MSISDN deleted',
+        self::AMOUNT_REACHED => 'The maximum service amount was already reached',
+        self::RETRIES_REACHED => 'The maximum charge retries was already reached',
+        self::MONTHLY_CAP_REACHED => 'The maximum monthly cap was reached',
+        self::MSISDN_IS_ACTIVE => 'The TARGET is already active',
+        self::SERVICE_NOT_FOUND => 'Service not found',
+        self::MSISDN_NOT_ACTIVE => 'The TARGET is already deactivated',
+        self::SYSTEM_CLOSED => 'System closed',
+        self::BROWSING_TIMEOUT => 'Browsing timeout',
+        self::DB_ERROR => 'Internal database access error',
+        self::TIMEOUT_ERROR => 'Timeout error',
+        self::INVALID_PARAMETERS => 'Error processing the request: invalid parameter(s)',
+        self::INTERNAL_ERROR => 'Internal error processing the request',
+    ];
 }
