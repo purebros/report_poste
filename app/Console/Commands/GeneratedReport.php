@@ -38,7 +38,7 @@ class GeneratedReport extends Command {
         fclose($file);
         $connection = ssh2_connect('10.10.2.150', 22);
         ssh2_auth_password($connection, 'root', 'Dy64@ih!2mpQ_C7j');
-        ssh2_scp_send($connection, $csvSrc, "/usr/local/bwms/jobs/report_mensile_Poste/reports/archived/{$fileName}", 0644);
+        ssh2_scp_send($connection, $csvSrc, "/usr/local/bwms/jobs/report_mensile_Poste/reports/archived/{$fileName}.csv", 0644);
         unset($csvSrc);
         Log::info('Iliad:GeneratedReport end process');
     }
