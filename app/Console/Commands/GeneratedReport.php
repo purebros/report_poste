@@ -30,6 +30,9 @@ class GeneratedReport extends Command {
         $file           = fopen($csvSrc, 'w');
         while ($data = $query->fetch(\PDO::FETCH_ASSOC)) {
             $data['Error_Description']= isset(Constants::TEXT_ERROR[$data['Error_code']]) ? Constants::TEXT_ERROR[$data['Error_code']] : Constants::TEXT_ERROR[99];
+            if($data['Error_Description']== Constants::TEXT_ERROR[99] ){
+                $data['Error_code']=Constants::INTERNAL_ERROR;
+            }
             fwrite($file, implode(";", $data)."\r\n");
         }
         fclose($file);
