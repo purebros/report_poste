@@ -26,7 +26,7 @@ class GeneratedReport extends Command {
         $smsMt = new SmsMT();
         $query = $smsMt->getToReport();
         $fileName       = 'PUREBROS_'.date('YmdHis').'ILIAD';
-        $csvSrc         = storage_path("app/public/{$fileName}") ;
+        $csvSrc         = storage_path("app/public/{$fileName}.csv") ;
         $file           = fopen($csvSrc, 'w');
         while ($data = $query->fetch(\PDO::FETCH_ASSOC)) {
             $data['Error_Description']= isset(Constants::TEXT_ERROR[$data['Error_code']]) ? Constants::TEXT_ERROR[$data['Error_code']] : Constants::TEXT_ERROR[99];
