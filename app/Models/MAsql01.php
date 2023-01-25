@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class MAsql01 extends Model {
-    protected $connection='vodafone';
-    protected $table='tab_content';
+    protected $connection='masql01';
+    protected $table='simply_request_from_poste';
     protected $primaryKey='id';
     public $timestamps =false;
 
@@ -38,7 +38,7 @@ class MAsql01 extends Model {
         cont.async_response                              CODICE_ERRORE,
         error.DescErrorCode                              DESCRIZIONE_ERRORE
         FROM
-        purebros.simply_request_from_poste cont
+        simply_request_from_poste cont
         LEFT JOIN tab_gateway_property cprice  ON  cprice.ContentTypeGWProp = cont.mt_servtype
             AND cprice.CarrierGWProp = '950'
             AND  cprice.ProviderGWProp = '836'
