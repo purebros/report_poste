@@ -23,7 +23,7 @@ class Tim extends Model {
         if(car.NameCarrier = 'Vodafone_GIG', 'Vodafone', if(car.NameCarrier='TIM-IT','TIM', car.NameCarrier))   ACCESS_PROVIDER,
         prov.NameProv   CSP_NAME,
         ContentIDCont  TSOID,
-        convert (AES_DECRYPT(cont.TargetCont, PbSSO.Get_Crypting_key()),char)  MSISDN,
+        cont.TargetCont   MSISDN,
         sname.ValueGWProp  SERVICE_NAME,
         TypeCont           SERVICE_ID,
         REPLACE(cprice.ValueGWProp,'.',',') IMPORTO,
