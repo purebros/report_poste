@@ -46,11 +46,7 @@ class SmsMT extends Model {
     public static function getMessageById($mtId){
         return self::where('mt_id', $mtId)->first();
     }
-    public function getToReport(){
-        $now = Carbon::now();
-        $now->subMonths(1);
-        $startDate = $now->format('Y-m-01 00:00:00');
-        $endDate = $now->endOfMonth()->format('Y-m-d 23:59:59');
+    public function getToReport($startDate, $endDate){
         $sql = self::select(
             DB::raw("DATE_FORMAT(InsertDate,'%Y%m') as  BILLING_PERIOD"),
             'ShortNumber as  NUMERAZIONE',
@@ -65,10 +61,18 @@ class SmsMT extends Model {
             DB::raw("if (syn_result= 'SUCCESS','OK', 'KO') as STATO"),
             DB::raw("if (syn_result= 'SUCCESS','0', syn_result) as Error_code")
         )
-            ->whereRaw("SmsMT.InsertDate >= '{$startDate}'")
-            ->whereRaw("SmsMT.InsertDate <= '{$endDate}'")
-            ->join('ShortNumberServiceType', 'ShortNumberServiceType.ServiceType', 'SmsMT.servicetype')
-            ->toSql();
+        ->whereRaw("SmsMT.InsertDate >= '{$startDate}'")
+        ->whereRaw("SmsMT.InsertDate <= '{$endDate}'")
+        ->join('ShortNumberServiceType', 'ShortNumberServiceType.ServiceType', 'SmsMT.servicetype')
+        ->toSql();
+
+        $db         = parent::getConnection()->getPdo();
+        $query      = $db->prepare($sql);
+        $query->execute();
+        return $query;
+    }
+    public function getToReportVodafone($startDate, $endDate){
+        $sql =
 
         $db         = parent::getConnection()->getPdo();
         $query      = $db->prepare($sql);
