@@ -41,10 +41,6 @@ class GeneratedReport extends Command {
         $fileNameMerge          = 'PUREBROS_'.date('YmdHis');
         $srcMerge               = storage_path("app/public/{$fileNameMerge}.csv");
 
-        $fileNameIliad          = 'PUREBROS_'.date('YmdHis').'ILIAD';
-        $srcIliad               = storage_path("app/public/{$fileNameIliad}.csv");
-        $this->csvIliad($startDate, $endDate, $srcIliad, $srcMerge);
-
         $fileNameVodafone       = 'PUREBROS_'.date('YmdHis').'Vodafone';
         $srcVodafone            = storage_path("app/public/{$fileNameVodafone}.csv");
         $this->csvVodafone($startDate, $endDate, $srcVodafone, $srcMerge);
@@ -56,6 +52,11 @@ class GeneratedReport extends Command {
         $fileNameMAsql01        = 'PUREBROS_'.date('YmdHis').'MAsql01';
         $srcMAsql01             = storage_path("app/public/{$fileNameMAsql01}.csv");
         $this->csvMSql01($startDate, $endDate, $srcMAsql01, $srcMerge);
+
+        $fileNameIliad          = 'PUREBROS_'.date('YmdHis').'ILIAD';
+        $srcIliad               = storage_path("app/public/{$fileNameIliad}.csv");
+        $this->csvIliad($startDate, $endDate, $srcIliad, $srcMerge);
+
 
 //        $connection = ssh2_connect('10.10.2.150', 22);
 //        ssh2_auth_password($connection, 'root', 'Dy64@ih!2mpQ_C7j');
