@@ -38,21 +38,24 @@ class GeneratedReport extends Command {
         $startDate = $now->format('Y-m-01 00:00:00');
         $endDate = $now->endOfMonth()->format('Y-m-d 23:59:59');
 
+        $fileNameMerge          = 'PUREBROS_'.date('YmdHis');
+        $srcMerge               = storage_path("app/public/{$fileNameMerge}.csv");
+
         $fileNameIliad          = 'PUREBROS_'.date('YmdHis').'ILIAD';
         $srcIliad               = storage_path("app/public/{$fileNameIliad}.csv");
-        $this->csvIliad($startDate, $endDate, $srcIliad);
+        $this->csvIliad($startDate, $endDate, $srcIliad, $srcMerge);
 
         $fileNameVodafone       = 'PUREBROS_'.date('YmdHis').'Vodafone';
         $srcVodafone            = storage_path("app/public/{$fileNameVodafone}.csv");
-        $this->csvVodafone($startDate, $endDate, $srcVodafone);
+        $this->csvVodafone($startDate, $endDate, $srcVodafone, $srcMerge);
 
         $fileNameTIM            = 'PUREBROS_'.date('YmdHis').'TIM';
         $srcTim                 = storage_path("app/public/{$fileNameTIM}.csv");
-        $this->csvTim($startDate, $endDate, $srcTim);
+        $this->csvTim($startDate, $endDate, $srcTim, $srcMerge);
 
         $fileNameMAsql01        = 'PUREBROS_'.date('YmdHis').'MAsql01';
         $srcMAsql01             = storage_path("app/public/{$fileNameMAsql01}.csv");
-        $this->csvMSql01($startDate, $endDate, $srcMAsql01);
+        $this->csvMSql01($startDate, $endDate, $srcMAsql01, $srcMerge);
 
 //        $connection = ssh2_connect('10.10.2.150', 22);
 //        ssh2_auth_password($connection, 'root', 'Dy64@ih!2mpQ_C7j');
@@ -60,55 +63,55 @@ class GeneratedReport extends Command {
 //        unset($csvSrc);
         //Log::info('Iliad:GeneratedReport end process');
     }
-    public function csvIliad($startDate, $endDate, $csvSrc){
+    public function csvIliad($startDate, $endDate, $srcFile, $srcFileMerge){
         Log::info('Iliad:GeneratedReport start process');
         $smsMt          = new SmsMT();
         $query          = $smsMt->getToReport($startDate, $endDate);
-        $file           = fopen($csvSrc, 'w');
+        $file           = fopen($srcFile, 'w');
+        $fileMerge      = fopen($srcFileMerge, 'w');
         while ($data = $query->fetch(\PDO::FETCH_ASSOC)) {
             $data['Error_Description']= isset(Constants::TEXT_ERROR[$data['Error_code']]) ? Constants::TEXT_ERROR[$data['Error_code']] : Constants::TEXT_ERROR[99];
             if($data['Error_Description']== Constants::TEXT_ERROR[99] ){
                 $data['Error_code']=Constants::INTERNAL_ERROR;
             }
             fwrite($file, implode(";", $data)."\r\n");
+            fwrite($fileMerge, implode(";", $data)."\r\n");
         }
         fclose($file);
-        Log::info('Iliad:GeneratedReport end process',['file'=>$csvSrc]);
+        fclose($fileMerge);
+        Log::info('Iliad:GeneratedReport end process', ['file'=>$srcFile, 'fileMerge'=>$srcFileMerge]);
     }
 
-    public function csvVodafone($startDate, $endDate, $csvSrc){
+    public function csvVodafone($startDate, $endDate, $srcFile, $srcFileMerge){
         Log::info('Vodafone:GeneratedReport start process');
         $smsMt          = new Vodafone();
-        $query          = $smsMt->getToReport($startDate, $endDate);
-        $file           = fopen($csvSrc, 'w');
-        while ($data = $query->fetch(\PDO::FETCH_ASSOC)) {
-            fwrite($file, implode(";", $data)."\r\n");
-        }
-        fclose($file);
-        Log::info('Vodafone:GeneratedReport end process',['file'=>$csvSrc]);
+        $this->makeCsvGeneric($smsMt, $startDate, $endDate, $srcFile, $srcFileMerge);
+        Log::info('Vodafone:GeneratedReport end process', ['file'=>$srcFile, 'fileMerge'=>$srcFileMerge]);
     }
 
-    public function csvTim($startDate, $endDate, $csvSrc){
+    public function csvTim($startDate, $endDate, $srcFile, $srcFileMerge){
         Log::info('Tim:GeneratedReport start process');
         $smsMt          = new Tim();
-        $query          = $smsMt->getToReport($startDate, $endDate);
-        $file           = fopen($csvSrc, 'w');
-        while ($data = $query->fetch(\PDO::FETCH_ASSOC)) {
-            fwrite($file, implode(";", $data)."\r\n");
-        }
-        fclose($file);
-        Log::info('Tim:GeneratedReport end process',['file'=>$csvSrc]);
+        $this->makeCsvGeneric($smsMt, $startDate, $endDate, $srcFile, $srcFileMerge);
+        Log::info('Tim:GeneratedReport end process', ['file'=>$srcFile, 'fileMerge'=>$srcFileMerge]);
     }
 
-    public function csvMSql01($startDate, $endDate, $csvSrc){
+    public function csvMSql01($startDate, $endDate, $srcFile, $srcFileMerge){
         Log::info('MSql01:GeneratedReport start process');
         $smsMt          = new MAsql01();
+        $this->makeCsvGeneric($smsMt, $startDate, $endDate, $srcFile, $srcFileMerge);
+        Log::info('MSql01:GeneratedReport end process', ['file'=>$srcFile, 'fileMerge'=>$srcFileMerge]);
+    }
+
+    public function makeCsvGeneric($smsMt, $startDate, $endDate, $srcFile, $srcFileMerge){
         $query          = $smsMt->getToReport($startDate, $endDate);
-        $file           = fopen($csvSrc, 'w');
+        $file           = fopen($srcFile, 'w');
+        $fileMerge      = fopen($srcFileMerge, 'w');
         while ($data = $query->fetch(\PDO::FETCH_ASSOC)) {
             fwrite($file, implode(";", $data)."\r\n");
+            fwrite($fileMerge, implode(";", $data)."\r\n");
         }
         fclose($file);
-        Log::info('MSql01:GeneratedReport end process',['file'=>$csvSrc]);
+        fclose($fileMerge);
     }
 }
