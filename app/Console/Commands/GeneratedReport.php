@@ -58,11 +58,22 @@ class GeneratedReport extends Command {
         $this->csvIliad($startDate, $endDate, $srcIliad, $srcMerge);
 
 
-//        $connection = ssh2_connect('10.10.2.150', 22);
-//        ssh2_auth_password($connection, 'root', 'Dy64@ih!2mpQ_C7j');
-//        ssh2_scp_send($connection, $csvSrc, "/usr/local/bwms/jobs/report_mensile_Poste/reports/archived/{$fileName}.csv", 0644);
-//        unset($csvSrc);
-        //Log::info('Iliad:GeneratedReport end process');
+        /** Copy files to server */
+        $connection = ssh2_connect('10.10.2.150', 22);
+        ssh2_auth_password($connection, 'root', 'Dy64@ih!2mpQ_C7j');
+
+        ssh2_scp_send($connection, $srcVodafone, "/usr/local/bwms/jobs/report_mensile_Poste/reports/archived/{$fileNameVodafone}.csv", 0644);
+        ssh2_scp_send($connection, $srcTim, "/usr/local/bwms/jobs/report_mensile_Poste/reports/archived/{$fileNameTIM}.csv", 0644);
+        ssh2_scp_send($connection, $srcMAsql01, "/usr/local/bwms/jobs/report_mensile_Poste/reports/archived/{$fileNameMAsql01}.csv", 0644);
+        ssh2_scp_send($connection, $srcIliad, "/usr/local/bwms/jobs/report_mensile_Poste/reports/archived/{$fileNameIliad}.csv", 0644);
+        ssh2_scp_send($connection, $srcMerge, "/usr/local/bwms/jobs/report_mensile_Poste/reports/archived/{$fileNameMerge}.csv", 0644);
+
+//        /** Copy files to client */
+//        $connectionClient = ssh2_connect($this->SFTPHOST, $this->SFTPPORT);
+//        ssh2_auth_password($connectionClient, $this->SFTPUSER, $this->SFTPPASS);
+//        ssh2_scp_send($connectionClient, $srcMerge, $this->SFTPPATH."/{$fileNameMerge}.csv", 0644);
+        //unset($csvSrc);
+
     }
     public function csvIliad($startDate, $endDate, $srcFile, $srcFileMerge){
         Log::info('Iliad:GeneratedReport start process');
