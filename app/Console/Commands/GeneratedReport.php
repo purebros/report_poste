@@ -69,7 +69,7 @@ class GeneratedReport extends Command {
         $smsMt          = new SmsMT();
         $query          = $smsMt->getToReport($startDate, $endDate);
         $file           = fopen($srcFile, 'w');
-        $fileMerge      = fopen($srcFileMerge, 'w');
+        $fileMerge      = fopen($srcFileMerge, 'a+');
         while ($data = $query->fetch(\PDO::FETCH_ASSOC)) {
             $data['Error_Description']= isset(Constants::TEXT_ERROR[$data['Error_code']]) ? Constants::TEXT_ERROR[$data['Error_code']] : Constants::TEXT_ERROR[99];
             if($data['Error_Description']== Constants::TEXT_ERROR[99] ){
@@ -107,7 +107,7 @@ class GeneratedReport extends Command {
     public function makeCsvGeneric($smsMt, $startDate, $endDate, $srcFile, $srcFileMerge){
         $query          = $smsMt->getToReport($startDate, $endDate);
         $file           = fopen($srcFile, 'w');
-        $fileMerge      = fopen($srcFileMerge, 'w');
+        $fileMerge      = fopen($srcFileMerge, 'a+');
         while ($data = $query->fetch(\PDO::FETCH_ASSOC)) {
             fwrite($file, implode(";", $data)."\r\n");
             fwrite($fileMerge, implode(";", $data)."\r\n");
