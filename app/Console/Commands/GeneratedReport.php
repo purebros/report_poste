@@ -21,7 +21,7 @@ class GeneratedReport extends Command {
     protected $SFTPPORT="44422";
     protected $SFTPUSER="purebros";
     protected $SFTPPASS="Pu_br03";
-    protected $SFTPPATH="/Report/";
+    protected $SFTPPATH="/Report";
 
     public function __construct() {
         parent::__construct();
@@ -57,26 +57,20 @@ class GeneratedReport extends Command {
         $srcIliad               = storage_path("app/public/{$fileNameIliad}.csv");
         $this->csvIliad($startDate, $endDate, $srcIliad, $srcMerge);
 
-
-        /** Copy files to server */
-        $connection = ssh2_connect('10.10.2.150', 22);
-        ssh2_auth_password($connection, 'root', 'Dy64@ih!2mpQ_C7j');
-
-        ssh2_scp_send($connection, $srcVodafone, "/usr/local/bwms/jobs/report_mensile_Poste/reports/archived/{$fileNameVodafone}.csv", 0644);
-        ssh2_scp_send($connection, $srcTim, "/usr/local/bwms/jobs/report_mensile_Poste/reports/archived/{$fileNameTIM}.csv", 0644);
-        ssh2_scp_send($connection, $srcMAsql01, "/usr/local/bwms/jobs/report_mensile_Poste/reports/archived/{$fileNameMAsql01}.csv", 0644);
-        ssh2_scp_send($connection, $srcIliad, "/usr/local/bwms/jobs/report_mensile_Poste/reports/archived/{$fileNameIliad}.csv", 0644);
-        ssh2_scp_send($connection, $srcMerge, "/usr/local/bwms/jobs/report_mensile_Poste/reports/archived/{$fileNameMerge}.csv", 0644);
-
         /** Copy files to client */
         $connectionClient = ssh2_connect($this->SFTPHOST, $this->SFTPPORT);
         ssh2_auth_password($connectionClient, $this->SFTPUSER, $this->SFTPPASS);
-        ssh2_scp_send($connectionClient, $srcMerge, $this->SFTPPATH."/{$fileNameMerge}.csv", 0644);
-        unset($srcMerge);
-        unset($srcVodafone);
-        unset($srcTim);
-        unset($srcMAsql01);
-        unset($srcIliad);
+        $resSFTP = ssh2_sftp($connectionClient);
+        $resFile = fopen("ssh2.sftp://{$resSFTP}".$this->SFTPPATH."/{$fileNameMerge}.csv", 'w');
+        $srcFile = fopen($srcMerge, 'r');
+        stream_copy_to_stream($srcFile, $resFile);
+
+        /** Copy files to archived */
+        rename($srcVodafone, "/usr/local/bwms/jobs/report_monthly_Poste_php/reports/archived/{$fileNameVodafone}.csv");
+        rename($srcTim, "/usr/local/bwms/jobs/report_monthly_Poste_php/reports/archived/{$fileNameTIM}.csv");
+        rename($srcMAsql01, "/usr/local/bwms/jobs/report_monthly_Poste_php/reports/archived/{$fileNameMAsql01}.csv");
+        rename($srcIliad, "/usr/local/bwms/jobs/report_monthly_Poste_php/reports/archived/{$fileNameIliad}.csv");
+        rename($srcMerge, "/usr/local/bwms/jobs/report_monthly_Poste_php/reports/archived/{$fileNameMerge}.csv");
 
     }
 
