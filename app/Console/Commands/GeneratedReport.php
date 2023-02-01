@@ -68,11 +68,15 @@ class GeneratedReport extends Command {
         ssh2_scp_send($connection, $srcIliad, "/usr/local/bwms/jobs/report_mensile_Poste/reports/archived/{$fileNameIliad}.csv", 0644);
         ssh2_scp_send($connection, $srcMerge, "/usr/local/bwms/jobs/report_mensile_Poste/reports/archived/{$fileNameMerge}.csv", 0644);
 
-//        /** Copy files to client */
-//        $connectionClient = ssh2_connect($this->SFTPHOST, $this->SFTPPORT);
-//        ssh2_auth_password($connectionClient, $this->SFTPUSER, $this->SFTPPASS);
-//        ssh2_scp_send($connectionClient, $srcMerge, $this->SFTPPATH."/{$fileNameMerge}.csv", 0644);
-        //unset($csvSrc);
+        /** Copy files to client */
+        $connectionClient = ssh2_connect($this->SFTPHOST, $this->SFTPPORT);
+        ssh2_auth_password($connectionClient, $this->SFTPUSER, $this->SFTPPASS);
+        ssh2_scp_send($connectionClient, $srcMerge, $this->SFTPPATH."/{$fileNameMerge}.csv", 0644);
+        unset($srcMerge);
+        unset($srcVodafone);
+        unset($srcTim);
+        unset($srcMAsql01);
+        unset($srcIliad);
 
     }
 
